@@ -1,0 +1,26 @@
+.favorites {
+    &__container {
+        max-width: $maxWidthContainer + 20px;
+        margin: 0 auto;
+        padding: 35px 10px;
+        background-color: #f6f6f6;
+    }
+
+    &__title {
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 34px;
+        color: #222222;
+        padding-bottom: 33px;
+        border-bottom: 1px solid #222222;
+        margin-top: 35px;
+        margin-bottom: 50px;
+    }
+
+    &__products {
+        padding: 45px 0;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px 22px;
+    }
+}

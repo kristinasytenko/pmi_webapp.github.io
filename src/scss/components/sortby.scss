@@ -1,0 +1,59 @@
+.sortby {
+    display: flex;
+    font-size: 18px;
+    line-height: 22px;
+    position: relative;
+    cursor: pointer;
+
+    span {
+        color: #4ee6f1;
+    }
+
+    &__title {
+        color: #222222;
+        margin-right: 5px;
+    }
+
+    &__popup {
+        position: absolute;
+        right: 0;
+        top: 30px;
+        width: 200px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 3px 3px rgba(0, 0, 0, 0.423);
+        z-index: 5;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+
+        &.opened {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        ul {
+            li {
+                font-size: 18px;
+                line-height: 22px;
+                color: #222222;
+                cursor: pointer;
+                padding: 5px 10px;
+                border-radius: 3px;
+                transition: color 0.3s ease-in-out;
+                &:not(:last-child) {
+                    margin-bottom: 10px;
+                }
+
+                &:hover {
+                    color: #4ee6f1;
+                }
+
+                &.active {
+                    color: #4ee6f1;
+                    background-color: #cfdaf5;
+                }
+            }
+        }
+    }
+}

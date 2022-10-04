@@ -1,0 +1,199 @@
+.opened-card {
+    position: relative;
+    width: $maxWidthContainer + 20px;
+    margin: 0 auto;
+    padding: 0 10px;
+    background-color: #f6f6f6;
+    padding: 50px 0;
+
+    &__body {
+        display: flex;
+        background-color: #fff;
+        padding: 35px 25px;
+    }
+
+    &__left-block {
+        flex: 1 1 50%;
+    }
+
+    &__right-block {
+        flex: 1 1 50%;
+    }
+}
+.left-block {
+    margin-right: 15px;
+
+    &__title {
+        font-size: 32px;
+        line-height: 39px;
+        color: #222222;
+        margin-bottom: 50px;
+    }
+
+    &__image {
+        position: relative;
+        width: 100%;
+        height: 320px;
+        margin-bottom: 20px;
+
+        img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+}
+.right-block {
+    margin-top: 90px;
+    margin-left: 15px;
+
+    &__memory {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    &__memory-title {
+        font-size: 18px;
+        line-height: 22px;
+        color: #222222;
+        width: 140px;
+    }
+
+    &__memory-items {
+        display: flex;
+        align-items: center;
+    }
+
+    &__memory-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 90px;
+        height: 38px;
+        background: #e6e6e6;
+        border-radius: 7px;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 22px;
+        color: #222222;
+        transition: background 0.3s ease-in-out;
+        cursor: pointer;
+        &:not(:last-child) {
+            margin-right: 15px;
+        }
+        &:hover {
+            background: #d3d3d3;
+        }
+        &.active {
+            background: #4ee6f1;
+            color: #fff;
+        }
+    }
+
+    &__description {
+        display: flex;
+        margin-bottom: 60px;
+    }
+
+    &__description-title {
+        font-size: 18px;
+        line-height: 22px;
+        color: #222222;
+        width: 140px;
+    }
+
+    &__description-text {
+        max-width: 400px;
+    }
+
+    &__price {
+        font-size: 24px;
+        line-height: 29px;
+        color: #222222;
+        margin-bottom: 30px;
+    }
+
+    &__buttons {
+        display: flex;
+    }
+
+    &__button-green {
+        background: #80ba21;
+        margin-right: 15px;
+        width: 170px;
+        height: 35px;
+        transition: background 0.3s ease-in-out;
+        &:hover {
+            background: #6d9f1c;
+        }
+        &:disabled {
+            background: #6d9f1c;
+            cursor: default;
+        }
+    }
+
+    &__button-purple {
+        background: #4ee6f1;
+        width: 170px;
+        height: 35px;
+        transition: background 0.3s ease-in-out;
+        &:hover {
+            background: #4ee6f1;
+        }
+    }
+}
+
+.button {
+    font-size: 18px;
+    line-height: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    border-radius: 7px;
+}
+
+
+.quantity_inner * {
+    box-sizing: border-box;    
+}    
+.quantity_inner {
+    display: inline-flex;
+    border-radius: 26px;
+    border: 4px solid #337AB7;
+}        
+.quantity_inner .bt_minus,
+.quantity_inner .bt_plus,
+.quantity_inner .quantity {
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    border: 0;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    outline: 0;
+}
+.quantity_inner .quantity {
+    width: 50px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #000;
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+}
+.quantity_inner .bt_minus svg,
+.quantity_inner .bt_plus svg {
+    stroke: #337AB7;
+    stroke-width: 4;
+    transition: 0.5s;
+    margin: 10px;
+}    
+.quantity_inner .bt_minus:hover svg,
+.quantity_inner .bt_plus:hover svg {
+    stroke: #000;
+}

@@ -1,0 +1,56 @@
+@import 'nullstyle';
+
+@import 'variables';
+
+@import 'components/header';
+@import 'components/home';
+@import 'components/sortby';
+@import 'components/card';
+@import 'components/cart';
+@import 'components/favorites';
+@import 'components/openedcard';
+@import 'components/cartitem';
+@import 'components/infomodal';
+@import 'components/footer';
+
+#root {
+    min-height: 100%;
+}
+
+.App {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: $fontFamily;
+    font-size: $fontSize;
+    font-weight: $fontWeight;
+    color: $mainColor;
+
+    &.hidden {
+        overflow: hidden;
+    }
+}
+
+.wrapper {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: $maxWidthContainer + 20px;
+    margin: 0 auto;
+    padding: 0 10px;
+}
