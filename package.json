@@ -45,6 +45,7 @@
     "devDependencies": {
     "typescript": "^4.7.4"
   },
-  "description": "`npm start`",
+  "description": "### `npm run server` ### `npm start`",
   "main": "index.js"
 }
+
