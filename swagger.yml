@@ -1,0 +1,851 @@
+swagger: "2.0"
+basePath: "/"
+info:
+  version: "1.0.0"
+  title: "Corezoid API Gateway"
+schemes:
+  - "https"
+  - "http"
+
+paths:
+  /apis:
+    post:
+      operationId: "CreateAPI"
+      tags: [ "apis" ]
+      summary: "Create an API"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "request"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateAPIRequest"
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: false
+      responses:
+        "200":
+          description: "The API has been successfully created"
+          schema:
+            $ref: "#/definitions/CreateAPIResponse"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+    get:
+      operationId: "ListAPIs"
+      tags: [ "apis" ]
+      summary: "List APIs"
+      produces:
+        - "application/json"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "query"
+          name: "owner_id"
+          description: "Owner ID that would hold the API"
+          type: "integer"
+          minimum: 1
+          required: true
+        - in: "query"
+          name: "external_id"
+          description: "External id representing id of api entity from external services"
+          type: "string"
+          minLength: 1
+          maxLength: 255
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: false
+      responses:
+        200:
+          description: "The list of APIs has been successfully retrieved"
+          schema:
+            $ref: "#/definitions/ListAPIResponse"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /apis/{api_id}:
+    get:
+      operationId: "GetAPI"
+      tags: [ "apis" ]
+      summary: "Get an API"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "api_id"
+          type: "string"
+          minLength: 10
+          maxLength: 10
+          required: true
+          description: "The API ID"
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: false
+      responses:
+        "200":
+          description: "The API has been successfully retrieved"
+          schema:
+            $ref: "#/definitions/CreateAPIResponse"
+        default:
+          description: "invalid operation"
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      operationId: "DeleteAPI"
+      tags: [ "apis" ]
+      summary: "Delete an API"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "api_id"
+          required: true
+          description: "API ID that would hold the path."
+          type: "string"
+          minLength: 10
+          maxLength: 10
+        - in: "body"
+          name: "request"
+          required: true
+          schema:
+            $ref: "#/definitions/DeleteAPIRequest"
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: false
+      responses:
+        "204":
+          description: "The API has been successfully deleted"
+        "409":
+          description: "The request revision does not match the stored one"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /apis/{api_id}/paths:
+    post:
+      operationId: "CreatePath"
+      tags: [ "paths" ]
+      summary: "Create a path"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "api_id"
+          minLength: 10
+          maxLength: 10
+          type: "string"
+          required: true
+          description: "The API ID that would hold the path"
+        - in: "body"
+          name: "request"
+          required: true
+          schema:
+            $ref: "#/definitions/CreatePathRequest"
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: false
+      responses:
+        "200":
+          description: "The path has been successfully created"
+          schema:
+            $ref: "#/definitions/PathResponse"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+    get:
+      operationId: "ListPaths"
+      tags: [ "paths" ]
+      summary: "List paths"
+      produces:
+        - "application/json"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "query"
+          name: "path_fragment"
+          type: "string"
+          minLength: 0
+          required: false
+          description: "Fragment of the path"
+        - in: "query"
+          name: "sort"
+          enum: [ "path", "updated_at" ]
+          type: "string"
+          minLength: 0
+          required: false
+          description: "Result sorting field"
+        - in: "query"
+          name: "direction"
+          enum: [ "asc", "desc" ]
+          type: "string"
+          minLength: 0
+          required: false
+          description: "Result sorting direction"
+        - in: "path"
+          name: "api_id"
+          minLength: 10
+          maxLength: 10
+          type: "string"
+          required: true
+          description: "API ID that holds the path"
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: false
+      responses:
+        "200":
+          description: "The paths list has been successfully retrieved"
+          schema:
+            $ref: "#/definitions/ListPathsResponse"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /apis/{api_id}/paths/{id}:
+    get:
+      operationId: "GetPath"
+      tags: [ "paths" ]
+      summary: "Get a path"
+      produces:
+        - "application/json"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          minimum: 1
+          type: "integer"
+          required: true
+          description: "Path ID"
+        - in: "path"
+          name: "api_id"
+          minLength: 10
+          maxLength: 10
+          type: "string"
+          required: true
+          description: "The API that holds the path"
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: false
+      responses:
+        "200":
+          description: "The path has been successfully retrieved"
+          schema:
+            $ref: "#/definitions/PathResponse"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /apis/{api_id}/paths/{path_id}:
+    delete:
+      operationId: "DeletePath"
+      tags: [ "paths" ]
+      summary: "Delete a path"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "api_id"
+          description: "The API that holds the path"
+          minLength: 10
+          maxLength: 10
+          type: "string"
+          required: true
+        - in: "path"
+          name: "path_id"
+          description: "Path ID"
+          minimum: 1
+          type: "integer"
+          required: true
+        - in: "body"
+          name: "request"
+          required: true
+          schema:
+            $ref: "#/definitions/DeletePathRequest"
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: false
+      responses:
+        "204":
+          description: "The path has been successfully deleted"
+        "409":
+          description: "The request revision does not match the stored one"
+          schema:
+            $ref: "#/definitions/Error"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+    put:
+      operationId: "EditPath"
+      tags: [ "paths" ]
+      summary: "Edit a path"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "api_id"
+          description: "The API that holds the path"
+          minLength: 10
+          maxLength: 10
+          type: "string"
+          required: true
+        - in: "path"
+          name: "path_id"
+          description: "Path ID"
+          minimum: 1
+          type: "integer"
+          required: true
+        - in: "body"
+          name: "request"
+          required: true
+          schema:
+            $ref: "#/definitions/EditPathRequest"
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: false
+      responses:
+        "200":
+          description: "The path has been successfully updated"
+          schema:
+            $ref: "#/definitions/PathResponse"
+        "409":
+          description: "The request revision does not match the stored one"
+          schema:
+            $ref: "#/definitions/PathConflictError"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /ping:
+    get:
+      operationId: "Ping"
+      summary: "Service health check probe"
+      produces: [ "text/plain" ]
+      responses:
+        200: { description: "Service is alive", schema: { type: "string" } }
+
+  /config:
+    get:
+      operationId: "GetConfig"
+      summary: "Get service config"
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: false
+      responses:
+        "200":
+          description: "API Gateway configuration has been successfully retrieved"
+          schema:
+            $ref: "#/definitions/GetConfigResponse"
+        default:
+          description: "Na error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /auth/login:
+    get:
+      operationId: "Login"
+      tags: [ "auth" ]
+      summary: "Get Single Account authentication URL"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "A token has been successfully created"
+          schema:
+            $ref: "#/definitions/AuthLoginResponse"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /auth/logout:
+    post:
+      operationId: "Logout"
+      tags: [ "auth" ]
+      summary: "Invalidate Single Account authorization token"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: true
+      responses:
+        "200":
+          description: "The token has been successfully invalidated"
+          schema:
+            $ref: "#/definitions/AuthLogoutResponse"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/UnauthorizedError"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /auth/login/return:
+    post:
+      operationId: "LoginReturn"
+      tags: [ "auth" ]
+      summary: "Exchange Single Account authorization code to an authorization token"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "LoginReturn"
+          description: "Authorization data to store"
+          required: true
+          schema:
+            $ref: "#/definitions/AuthLoginReturnRequest"
+      responses:
+        "200":
+          description: "The token has been successfully saved"
+          schema:
+            $ref: "#/definitions/AuthLoginReturnResponse"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/UnauthorizedError"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /auth/refresh:
+    post:
+      operationId: "Refresh"
+      tags: [ "auth" ]
+      summary: "Refresh Single Account authorization token"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: true
+      responses:
+        "200":
+          description: "The token has been successfully updated"
+          schema:
+            $ref: "#/definitions/AuthRefreshResponse"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /auth/me:
+    get:
+      operationId: "Me"
+      tags: [ "auth" ]
+      summary: "Get user account information"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: true
+      responses:
+        "200":
+          description: "User data have been successfully retrieved"
+          schema:
+            $ref: "#/definitions/AuthMeResponse"
+        default:
+          description: "An error occurred"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /export/{owner_id}:
+    get:
+      operationId: "ExportByOwnerId"
+      tags: [ "export_data" ]
+      summary: "Export user APIs and paths"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "owner_id"
+          description: "Owner ID"
+          type: "integer"
+          minimum: 1
+          required: true
+        - in: "query"
+          name: "api_ids"
+          description: "API IDs to export"
+          type: "array"
+          items:
+            type: "string"
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: true
+      responses:
+        "200":
+          description: "Data successfully exported"
+          schema:
+            $ref: "#/definitions/ExportedData"
+        "401":
+          description: "Unauthorized"
+        "422":
+          description: "Unprocessable content"
+          schema:
+            $ref: "#/definitions/UnprocessableContentError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/InternalServerError"
+
+  /import/{owner_id}:
+    post:
+      operationId: "ImportByOwnerId"
+      tags: [ "import_data" ]
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "owner_id"
+          description: "Owner ID"
+          type: "integer"
+          minimum: 1
+          required: true
+        - in: "body"
+          name: "request"
+          required: true
+          schema:
+            $ref: "#/definitions/ExportedData"
+        - in: "header"
+          name: "Authorization"
+          minLength: 1
+          type: "string"
+          required: true
+      responses:
+        "200":
+          description: "Data successfully imported"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/UnauthorizedError"
+        "422":
+          description: "Unprocessable content"
+          schema:
+            $ref: "#/definitions/UnprocessableContentError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/InternalServerError"
+
+definitions:
+  API:
+    type: "object"
+    description: "An API entity"
+    required: [ "owner_id", "id" ]
+    properties:
+      id: { type: "string", minLength: 10, maxLength: 10, description: "A unique ID generated upon API creation", example: "9492vbp70k" }
+      owner_id: { type: "integer", minimum: 1, description: "A user ID who owns the API", example: 162534 }
+      revision: { type: "integer", minimum: 1, description: "Revision", example: 314 }
+      name: { type: "string", maxLength: 255, minLength: 1, description: "Human-readable name", example: "MyGreatAPI" }
+      description: { type: "string", maxLength: 5000, minLength: 1, description: "Human-readable description", example: "The best API ever!" }
+      host: { type: "string", minLength: 0, description: "API fully domain name", example: "9492vbp70k.my-company.com" }
+      external_id: { type: "string", minLength: 1, maxLength: 255, description: "External service ID", example: "theService" }
+      created_at: { type: "integer", minimum: 0, description: "Creation time", example: 1665241729 }
+      updated_at: { type: "integer", minimum: 0, description: "Last update time", example: 1665241729 }
+
+  PathTimeout:
+    type: "number"
+    description: "Request timeout in seconds, can be a fraction of a second"
+    minimum: 0.05
+    maximum: 29
+    example: 2.75
+  Path:
+    type: "object"
+    description: "A path entity"
+    required: [ "id", "api_id", "owner_id", "process_id", "path", "method" ]
+    properties:
+      id: { type: "integer", "description": "A unique ID generated upon path creation", example: 615243 }
+      api_id: { type: "string", minLength: 10, maxLength: 10, "description": "The API ID which is the path related to", example: "9492vbp70k" }
+      owner_id: { type: "integer", minimum: 1, "description": "A user ID who owns the path", example: 162534 }
+      process_id: { type: "integer", minimum: 1, "description": "A Corezoid process ID", example: 6473871 }
+      revision: { type: "integer", minimum: 1, "description": "Revision", example: 314 }
+      path: { type: "string", minLength: 1, maxLength: 512, pattern: "^/", "description": "The path", "example": "/categories/{{id}}" }
+      method: { type: "string", enum: [ "POST", "GET", "PUT", "PATCH", "DELETE" ], description: "The HTTP method to call the path", example: "POST" }
+      async: { type: "boolean", description: "If set true, API Gateway won't wait for callback from Corezoid and immediately returns 204 once task is accepted by Corezoid" }
+      paused: { type: "boolean", description: "Whether calls to the path must be ignored" }
+      proxy_headers: { type: "boolean", description: "Whether to pass all received HTTP headers to Corezoid" }
+      proxy_raw_body: { type: "boolean", description: "Whether to pass the whole HTTP body to Corezoid" }
+      timeout: { "$ref": "#/definitions/PathTimeout" }
+      description: { type: "string", maxLength: 5000, minLength: 1, description: "Human-readable description", example: "Call me to do something good" }
+      created_at: { type: "integer", minimum: 0, description: "Creation time", example: 1665246667 }
+      updated_at: { type: "integer", minimum: 0 , description: "Last update time", example: 1665246667 }
+      public:
+        type: "object"
+        description: "Whether it's allowed to call the path without authorization"
+        required: [ "api_login" ]
+        properties:
+          api_login: { type: "integer", minimum: 1, description: "Corezoid API key ID", example: 829175 }
+
+  CreateAPIRequest:
+    type: "object"
+    description: "Create API request"
+    required: [ "owner_id" ]
+    properties:
+      owner_id: { type: "integer", minimum: 1, description: "Owner ID", example: 615243 }
+      name: { type: "string", maxLength: 255, minLength: 1, description: "Human-readable name", example: "MyGreatAPI" }
+      description: { type: "string", maxLength: 5000, minLength: 1, description: "Human-readable description", example: "The best API ever!" }
+      external_id: { type: "string", minLength: 1, maxLength: 255, description: "External service ID", example: "theService" }
+  DeleteAPIRequest:
+    type: "object"
+    description: "Delete API request"
+    required: [ "revision" ]
+    properties:
+      revision: { type: "integer", minimum: 1, description: "Revision", example: 314 }
+  CreateAPIResponse:
+    type: "object"
+    description: "API request result"
+    required: [ "api" ]
+    properties:
+      api: { "$ref": "#/definitions/API" }
+  ListAPIResponse:
+    type: "array"
+    description: "List of APIs"
+    items:
+      "$ref": "#/definitions/API"
+
+  CreatePathRequest:
+    type: "object"
+    description: "Create path request"
+    required: [ "process_id", "path", "method" ]
+    properties:
+      process_id: { type: "integer", minimum: 1, description: "Corezoid process ID", example: 9283641 }
+      # keep maxLength in sync with pathvalidatator const and path column size in db
+      path: { type: "string", minLength: 1, maxLength: 512, description: "The path", example: "/categories/{{id}}" }
+      method: { type: "string", enum: [ "POST", "GET", "PUT", "PATCH", "DELETE" ], description: "The HTTP method to call the path", example: "POST" }
+      description: { type: "string", maxLength: 5000, minLength: 1, description: "Human-readable description", example: "Call me to do something good" }
+      paused: { type: "boolean", "description": "Whether calls to the path must be ignored" }
+      proxy_headers: { type: "boolean", description: "Whether to pass all received HTTP headers to Corezoid" }
+      proxy_raw_body: { type: "boolean", description: "Whether to pass the whole HTTP body to Corezoid" }
+      timeout: { "$ref": "#/definitions/PathTimeout" }
+      async: { type: "boolean", "description": "If set true, API Gateway won't wait for callback from Corezoid and immediately returns 204 once task is accepted by Corezoid" }
+      public:
+        type: "object"
+        description: "Whether it's allowed to call the path without authorization"
+        required: [ "api_login" ]
+        properties:
+          api_login: { type: "integer", minimum: 1, example: 736254 }
+  DeletePathRequest:
+    type: object
+    description: "Delete path request"
+    required: [ "revision" ]
+    properties:
+      revision: { type: "integer", minimum: 1, description: "Revision", example: 314 }
+  EditPathRequest:
+    type: "object"
+    description: "Edit path request"
+    required: [ "process_id", "path", "method", "revision" ]
+    properties:
+      process_id: { type: "integer", minimum: 1, description: "Corezoid process ID", example: 9827451 }
+      revision: { type: "integer", minimum: 1, description: "Path revision", example: 314 }
+      path: { type: "string", minLength: 1, maxLength: 512, description: "A new path", example: "/groups/{{id}}" }
+      method: { type: "string", enum: [ "POST", "GET", "PUT", "PATCH", "DELETE" ], description: "The HTTP method to call the path", example: "PUT" }
+      description: { type: "string", maxLength: 5000, minLength: 1 }
+      paused: { type: "boolean", "description": "Whether calls to the path must be ignored" }
+      async: { type: "boolean", "description": "If set true, API Gateway won't wait for callback from Corezoid and immediately returns 204 once task is accepted by Corezoid" }
+      proxy_headers: { type: "boolean" }
+      proxy_raw_body: { type: "boolean" }
+      timeout: { "$ref": "#/definitions/PathTimeout" }
+      public:
+        type: "object"
+        description: "Whether it's allowed to call the path without authorization"
+        required: [ "api_login" ]
+        properties:
+          api_login: { type: "integer", minimum: 1 }
+  PathResponse:
+    type: "object"
+    description: "Path request result"
+    required: [ "path" ]
+    properties:
+      path: { "$ref": "#/definitions/Path" }
+  ListPathsResponse:
+    type: "array"
+    description: "List paths request result"
+    items:
+      $ref: "#/definitions/Path"
+
+  AuthLoginReturnRequest:
+    type: "object"
+    description: "Login request"
+    required: [ "code" ]
+    properties:
+      code: { type: "string", minLength: 1 }
+
+  AuthLoginReturnResponse:
+    type: "object"
+    description: "Login result"
+    required: [ "user_id", "token", "expire_at" ]
+    properties:
+      user_id: { type: "integer", description: "User ID", example: 283714 }
+      token: { type: "string", maxLength: 32, minLength: 16, description: "Auth token", example: "khYgav6Rgdyuej(8sdjh" }
+      expire_at: { type: "integer", minimum: 1, description: "Token expiration time", example: 1665246667 }
+
+  AuthRefreshResponse:
+    type: "object"
+    description: "Auth token refresh result"
+    required: [ "user_id", "token", "expire_at" ]
+    properties:
+      user_id: { type: "integer",  description: "User ID", example: 283714 }
+      token: { type: "string", maxLength: 32, minLength: 16, description: "A new auth token", example: "ma96tev5wJrFeqda" }
+      expire_at: { type: "integer", minimum: 1, description: "Token expiration time", example: 1689282726 }
+
+  AuthLoginResponse:
+    type: "object"
+    description: "Login request result"
+    required: [ "redirect_uri" ]
+    properties:
+      redirect_uri: { type: "string", minLength: 1, maxLength: 2000, description: "The URL where the user should be redirected to after login procedure", example: "https://the-company.com/login/result" }
+
+  AuthMeResponse:
+    type: "object"
+    description: "Get user info request result"
+    required: [ "id", "login" ]
+    properties:
+      id: { type: "integer", description: "User ID", example: 837462 }
+      user_photo: { type: "string", description: "The URL of the user's photo", example: "https://avatar.the-company.com/user/837462-256x256.png" }
+      login: { type: "string", description: "User login", example: "johndoe" }
+      lang: { type: "string", description: "User's language", example: "en" }
+      status: { type: "string", description: "User status", example: "active" }
+      create_time: { type: "integer", description: "User creation time", example: 1665246667 }
+      description: { type: "string", description: "User description", example: "John Doe" }
+
+  AuthLogoutResponse:
+    type: "object"
+    description: "Logout request result"
+
+  GetConfigResponse:
+    type: "object"
+    description: "Service configuration"
+    required: [ "config" ]
+    properties:
+      config:
+        type: "object"
+        required: [ "corezoid_http_host", "single_account_http_host" ]
+        properties:
+          corezoid_http_host: { type: "string", description: "Base URL of Corezoid host", example: "https://corezoid.com" }
+          single_account_http_host: { type: "string", description: "Base URL of Single Account host", example: "https://account.corezoid.com" }
+
+  ExportedData:
+    type: "object"
+    description: "Exported APIs and paths"
+    properties:
+      apis:
+        type: "array"
+        items:
+          $ref: "#/definitions/API"
+      paths:
+        type: "array"
+        items:
+          $ref: "#/definitions/Path"
+
+  Error:
+    type: "object"
+    description: "An error"
+    required: [ "type" ]
+    properties:
+      type:
+        type: "string"
+        enum: [ "error", "internal_error" ]
+        example: "internal_error"
+      message:
+        type: "string"
+        example: "Something went wrong"
+
+  UnauthorizedError:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+        example: "You're not authorized to perform this action"
+
+  UnprocessableContentError:
+    type: "object"
+    description: "Unprocessable content"
+    properties:
+      message:
+        type: "string"
+        example: "API ID cannot be empty"
+
+  PathConflictError:
+    type: "object"
+    description: "A path with the same revision is already exists"
+    required: [ "type" ]
+    properties:
+      type:
+        type: "string"
+        enum: [ "error", "internal_error" ]
+        example: "internal_error"
+      message:
+        type: "string"
+        example: "Something went wrong"
+      path:
+        $ref: "#/definitions/Path"
+
+  InternalServerError:
+    type: "object"
+    description: "Internal server error"
+    required: [ "error_id" ]
+    properties:
+      error_id:
+        type: "integer"
+        example: 1681205010
